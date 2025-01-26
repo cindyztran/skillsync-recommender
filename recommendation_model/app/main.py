@@ -36,6 +36,10 @@ class QnARequest(BaseModel):
 class PlanRequest(BaseModel):
     goal: str
     duration_weeks: int
+    
+class LearningPlanRequest(BaseModel):
+    user_id: int
+    goal: str
 
 # Endpoints
 @app.get("/")
@@ -91,5 +95,47 @@ def generate_plan(request: PlanRequest):
             model=openai_model,
         )
         return {"goal": request.goal, "duration_weeks": request.duration_weeks, "plan":  response.choices[0].message.content.strip()}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/personalized-learning-plan")
+def generate_personalized_plan(request: LearningPlanRequest):
+    try:
+        # Step 1: PyTorch Skill Recommendation
+        user_tensor = torch.tensor([request.user_id])  # Example user input
+        skill_ids = list(range(len(skill_mapping)))  # Generate all skill IDs for predictions
+        skill_tensor = torch.tensor(skill_ids)  # Create tensor for all possible skills
+
+        # Get predictions from the model
+        with torch.no_grad():  # Disable gradient tracking for inference
+            predictions = model(user_tensor.repeat(len(skill_tensor)), skill_tensor)
+        
+        # Sort skills by predicted ratings (descending order)
+        k = min(5, predictions.size(0))  # Ensure k does not exceed the number of predictions
+        _, top_indices = torch.topk(predictions, k=k)
+        print("Skill tensor size:", skill_tensor.size())
+        print("Predictions size:", predictions.size())
+        print("Top k value:", k)
+        recommended_skills = [f"Skill {skill_ids[i]}" for i in top_indices.numpy()]
+
+        # Step 2: GPT Plan Generation
+        skill_list = ", ".join(recommended_skills)
+        gpt_response = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Create a learning plan for the goal '{request.goal}' using these skills: {skill_list}",
+                }
+            ],
+            model=openai_model,
+        )
+        learning_plan = gpt_response.choices[0].message.content.strip()
+        # Step 3: Return Combined Response
+        return {
+            "user_id": request.user_id,
+            "recommended_skills": recommended_skills,
+            "learning_plan": learning_plan
+        }
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
