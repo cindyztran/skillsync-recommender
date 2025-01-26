@@ -17,14 +17,16 @@ This project demonstrates a recommendation system deployed using FastAPI.
 
 - /: Root endpoint to verify the server is running.
 - /recommend: Predict skill ratings for a given user and skill.
+- /qna: Allows users to ask questions, and OpenAI’s GPT API provides answers.
+- /personalized-learning-plan: Combines the PyTorch recommendation system and OpenAI’s GPT API to generate a personalized learning plan for a user. Recommends skills based on user preferences (via PyTorch) and generates a detailed learning plan using GPT.
 
 ## Setup
 
 1. Clone the Repository
 
 ```
-git clone https://github.com/cindyztran/skillsync-pytorch.git
-cd skillsync-pytorch
+git clone https://github.com/cindyztran/skillsync-recommender.git
+cd skillsync-recommender
 ```
 
 2. Install Dependencies
@@ -83,32 +85,83 @@ uvicorn app.main:app --reload
 
 1. /recommend Endpoint
 
-Request Body
+   Example Request Body
 
-```
-{
-"user_id": 1,
-"skill_id": 101
-}
-```
+   ```
+   {
+   "user_id": 1,
+   "skill_id": 101
+   }
+   ```
 
-Example cURL Command
+   Example Response
 
-```
-curl -X POST "http://127.0.0.1:8000/recommend" \
--H "Content-Type: application/json" \
--d '{"user_id": 1, "skill_id": 101}'
-```
+   ```
+   {
+   "user_id": 1,
+   "skill_id": 101,
+   "predicted_rating": 4.5
+   }
+   ```
 
-Example Response
+2. /qna
 
-```
-{
-"user_id": 1,
-"skill_id": 101,
-"predicted_rating": 4.5
-}
-```
+   Example Request Body
+
+   ```
+   {
+   "question": "What are the best skills to learn for AI development?"
+   }
+   ```
+
+   Example Response
+
+   ```
+   {
+   "question": "What are the best skills to learn for AI development?",
+   "answer": "The best skills to learn for AI development include Python, machine learning, and deep learning frameworks like TensorFlow or PyTorch."
+   }
+   ```
+
+3. /personalized-learning-plan
+
+   Example Request Body
+
+   ```
+   {
+   "user_id": 1,
+   "goal": "Become proficient in AI development"
+   }
+   ```
+
+   Example Response
+
+   ```
+   {
+   "user_id": 1,
+   "recommended_skills": ["Skill 101", "Skill 102"],
+   "learning_plan": "Week 1: Learn the basics of Skill 101. Week 2: Practice Skill 102 in real-world applications. ..."
+   }
+   ```
+
+## Features Description
+
+### Core Features
+
+#### Recommendation System:
+
+- Built with PyTorch.
+- Provides skill recommendations for a user based on their preferences.
+
+#### AI-Powered Features:
+
+- Integrated OpenAI GPT for answering questions and generating personalized learning plans.
+
+### Combined Features
+
+#### End-to-End Learning Plans:
+
+- Combines recommendations with GPT to provide a tailored learning experience for users.
 
 ## **Files Description**
 
