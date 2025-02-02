@@ -25,4 +25,4 @@ jobs:
         run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
 
       - name: Run tests
-        run: PYTHONPATH=. pytest tests/
+        run: cd recommendation_model && PYTHONPATH=. pytest tests/
