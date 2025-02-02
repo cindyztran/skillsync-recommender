@@ -2,7 +2,7 @@ import torch;
 import torch.nn as nn;
 import pandas as pd;
 from sklearn.model_selection import train_test_split;
-# import os
+import os
 
 # simulated dataset
 data = {
@@ -71,11 +71,9 @@ for epoch in range(epochs):
     optimizer.step()
     print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss.item():.4f}");
 
-# # Define the path to the 'models' directory
-# model_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "models"))
-
-# # Ensure the directory exists
-# os.makedirs(model_dir, exist_ok=True)
+# Ensure the models directory exists
+model_dir = "models"
+os.makedirs(model_dir, exist_ok=True)  # Create directory if it doesn’t exist
 
 # # Save the model
 model_path = "models/recommendation_model.pth"
