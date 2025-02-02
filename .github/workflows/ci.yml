@@ -24,5 +24,8 @@ jobs:
       - name: Set API Key
         run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
 
+      - name: Train Model (Generate recommendation_model.pth)
+        run: cd recommendation_model && python recommendation_model.py
+
       - name: Run tests
         run: cd recommendation_model && PYTHONPATH=. pytest tests/
