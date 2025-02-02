@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-torch
-pandas
-openai
-python-dotenv
-pytest

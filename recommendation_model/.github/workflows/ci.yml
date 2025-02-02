@@ -13,13 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Change to project directory
+        run: cd recommendation_model
+
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
           python-version: "3.9"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: cd recommendation_model && pip install -r requirements.txt
 
       - name: Run tests
-        run: PYTHONPATH=. pytest tests/
+        run: cd recommendation_model && PYTHONPATH=. pytest tests/
