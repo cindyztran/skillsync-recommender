@@ -11,10 +11,14 @@ load_dotenv()  # Load environment variables from .env
 # Initialize FastAPI app
 app = FastAPI()
 
-# Set OpenAI API key
-client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
-)
+# Get OpenAI API Key
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    raise ValueError("Missing OpenAI API Key. Set OPENAI_API_KEY as an environment variable.")
+
+# Initialize OpenAI Client
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Load the trained model
 model = RecommendationModel(len(user_mapping), len(skill_mapping))

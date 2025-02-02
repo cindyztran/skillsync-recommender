@@ -13,9 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Change to project directory
-        run: cd recommendation_model
-
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
@@ -24,5 +21,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Set API Key
+        run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
+
       - name: Run tests
-        run: cd recommendation_model && PYTHONPATH=. pytest tests/
+        run: PYTHONPATH=. pytest tests/
