@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import torch
-from app.model import RecommendationModel, user_mapping, skill_mapping
+from recommendation_model.app.model import RecommendationModel, user_mapping, skill_mapping
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -20,9 +20,16 @@ if not OPENAI_API_KEY:
 # Initialize OpenAI Client
 client = OpenAI(api_key=OPENAI_API_KEY)
 
+# Check model path
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "../models/recommendation_model.pth")
+
+if not os.path.exists(MODEL_PATH):
+    raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
+
+
 # Load the trained model
 model = RecommendationModel(len(user_mapping), len(skill_mapping))
-model.load_state_dict(torch.load("models/recommendation_model.pth"))
+model.load_state_dict(torch.load(MODEL_PATH))
 model.eval()
 
 openai_model = "gpt-4o-mini"

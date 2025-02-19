@@ -19,7 +19,7 @@ jobs:
           python-version: "3.9"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: cd recommendation_model && pip install -r requirements.txt
 
       - name: Set API Key
         run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
