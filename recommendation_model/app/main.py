@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import torch
-from recommendation_model.app.model import RecommendationModel, user_mapping, skill_mapping
+from app.model import RecommendationModel, user_mapping, skill_mapping
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
